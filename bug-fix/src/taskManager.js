@@ -36,13 +36,9 @@ function addTask(tasks, title, priority = 'medium') {
  * @param {number} id
  */
 function completeTask(tasks, id) {
-  // Bug: 元のタスクオブジェクトを直接書き換えてしまっている
-  return tasks.map((task) => {
-    if (task.id === id) {
-      task.completed = true;
-    }
-    return task;
-  });
+  return tasks.map((task) =>
+    task.id === id ? { ...task, completed: true } : task
+  );
 }
 
 /**
@@ -59,8 +55,7 @@ function deleteTask(tasks, id) {
  * @param {Array} tasks
  */
 function getCompletedTasks(tasks) {
-  // Bug: 完了していないタスクを返してしまっている
-  return tasks.filter((task) => !task.completed);
+  return tasks.filter((task) => task.completed);
 }
 
 /**
@@ -71,8 +66,7 @@ function getCompletedTasks(tasks) {
 function calculateProgress(tasks) {
   if (tasks.length === 0) return 0;
   const completed = tasks.filter((t) => t.completed).length;
-  // Bug: 100を掛けていないので 0〜1 の小数が返ってしまう
-  return completed / tasks.length;
+  return Math.round((completed / tasks.length) * 100);
 }
 
 /**
@@ -81,8 +75,7 @@ function calculateProgress(tasks) {
  */
 function sortByPriority(tasks) {
   const order = { high: 1, medium: 2, low: 3 };
-  // Bug: a と b が逆なので low → medium → high の昇順になってしまっている
-  return [...tasks].sort((a, b) => order[b.priority] - order[a.priority]);
+  return [...tasks].sort((a, b) => order[a.priority] - order[b.priority]);
 }
 
 module.exports = {
